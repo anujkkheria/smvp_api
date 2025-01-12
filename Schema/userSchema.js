@@ -1,6 +1,6 @@
-import bcrypt from "bcryptjs";
-import validator from "validator";
-import mongoose from "mongoose";
+import bcrypt from 'bcryptjs'
+import validator from 'validator'
+import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     lowercase: true,
-    validate: [validator.isEmail, "please enter an email"],
+    validate: [validator.isEmail, 'please enter an email'],
   },
   password: {
     type: String,
@@ -25,28 +25,28 @@ const userSchema = new mongoose.Schema({
     Selection: false,
     validate: {
       validator: function (el) {
-        return el === this.password;
+        return el === this.password
       },
     },
-    message: "please enter the same password",
+    message: 'please enter the same password',
   },
   role: {
     type: String,
     required: true,
-    minlength: 8,
   },
-});
+})
 
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 12);
-  this.confirmPassword = undefined;
-  next();
-});
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next()
+  this.password = await bcrypt.hash(this.password, 12)
+  this.confirmPassword = undefined
+  next()
+})
 
 userSchema.methods.comparePassword = async function (Recpass, correctpass) {
-  const auth = await bcrypt.compare(correctpass, Recpass);
-  return auth;
-};
+  const auth = await bcrypt.compare(correctpass, Recpass)
+  console.log(auth)
+  return auth
+}
 
-export const user = mongoose.model("user", userSchema);
+export const user = mongoose.model('user', userSchema)
